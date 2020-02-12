@@ -1,6 +1,7 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
+#include "random_num.c"
 
 int
 main(int argc, char *argv[])
@@ -24,5 +25,11 @@ main(int argc, char *argv[])
     getprocessesinfo(myProcess);
     settickets(69);
     getprocessesinfo(myProcess);
+  for(int i = 0; i < 10; i++){
+    unsigned myRandom = next_random();
+    //myRandom = 113;
+    printf(1, "Random number %d is %d \n", i , (int) myRandom);
+  }
+
   exit();
 }

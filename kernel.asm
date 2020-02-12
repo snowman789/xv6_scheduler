@@ -9988,10 +9988,8 @@ int sys_getprocessesinfo(){
 80104e77:	83 c4 10             	add    $0x10,%esp
 80104e7a:	85 c0                	test   %eax,%eax
 80104e7c:	78 10                	js     80104e8e <sys_getprocessesinfo+0x2d>
+    return -1;
   }
-
-
-
 
   return getprocessesinfo_helper(my_process_info);
 80104e7e:	83 ec 0c             	sub    $0xc,%esp

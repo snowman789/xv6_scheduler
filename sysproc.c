@@ -121,7 +121,7 @@ int sys_settickets(void){
   return 0;
 }
 
-int sys_getprocessesinfo(){
+int sys_getprocessesinfo(void){
   struct processes_info *my_process_info;
   //int x;
   
@@ -131,9 +131,6 @@ int sys_getprocessesinfo(){
   if( argptr(0, (void*) &my_process_info, sizeof(*my_process_info)) < 0){
     return -1;
   }
-
-
-
 
   return getprocessesinfo_helper(my_process_info);
 }
