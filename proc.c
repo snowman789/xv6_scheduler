@@ -537,3 +537,25 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int getprocessesinfo_helper(struct processes_info *my_process_info){
+
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  int i = 0;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != UNUSED){
+      //cprintf("PID %d has %d tickets! \n", p->pid, p->tickets);
+      my_process_info->pids[i] = p->pid;
+      my_process_info->tickets[i] = p->tickets;
+      my_process_info->times_scheduled[i] = p->num_times_scheduled;
+      my_process_info->num_processes = ++i;
+
+    }
+    
+  }
+  
+  release(&ptable.lock);
+  return 0;
+}

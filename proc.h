@@ -1,3 +1,5 @@
+
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -32,6 +34,7 @@ struct context {
   uint eip;
 };
 
+
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
@@ -52,6 +55,11 @@ struct proc {
   unsigned int num_times_scheduled;
   int   tickets;
 };
+
+struct processes_info;
+
+
+int getprocessesinfo_helper(struct processes_info *my_process_info);
 
 // Process memory is laid out contiguously, low addresses first:
 //   text

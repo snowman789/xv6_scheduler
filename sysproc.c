@@ -8,10 +8,6 @@
 #include "proc.h"
 #include "spinlock.h"
 
-struct {
-  struct spinlock lock;
-  struct proc proc[NPROC];
-} ptable;
 
 
 
@@ -126,33 +122,18 @@ int sys_settickets(void){
 }
 
 int sys_getprocessesinfo(){
-  struct processes_info *process_info;
+  struct processes_info *my_process_info;
   //int x;
-  struct proc *p;
+  
 
 
-  acquire(&ptable.lock);
-  if( argptr(0, (void*) &process_info, sizeof(*process_info)) < 0){
-    release(&ptable.lock);
+  
+  if( argptr(0, (void*) &my_process_info, sizeof(*my_process_info)) < 0){
     return -1;
   }
 
-  int i = 0;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state != UNUSED){
-      //cprintf("PID %d has %d tickets! \n", p->pid, p->tickets);
-      process_info->pids[i] = p->pid;
-      process_info->tickets[i] = p->tickets;
-      process_info->times_scheduled[i] = p->num_times_scheduled;
-      process_info->num_processes = ++i;
 
-    }
-    
-  }
-  
-  
-  
 
-  release(&ptable.lock);
-  return 0;
+
+  return getprocessesinfo_helper(my_process_info);
 }
