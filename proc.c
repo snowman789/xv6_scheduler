@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "random_num.c"
 
 struct {
   struct spinlock lock;
@@ -331,18 +332,42 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
-  
+ 
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    int total_tickets = 0;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    int runnable_processes = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+      runnable_processes++;
 
-      // Switch to chosen process.  It is the process's job
+      total_tickets += p->tickets;
+      cprintf("process %d has %d tickets \n", p->pid, p->tickets);
+   
+    }
+
+    if(runnable_processes == 0){
+      release(&ptable.lock);
+      continue;
+    } 
+
+    unsigned myRandom = next_random();
+    myRandom = myRandom % total_tickets;
+    if(myRandom == 0) myRandom++;
+    int myRandInt = (int) myRandom;
+    int tick_index = 0;
+
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE) continue;
+
+      tick_index += p->tickets;
+      if(tick_index < myRandInt) continue;
+
+         // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
       c->proc = p;
@@ -355,7 +380,10 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
+
     }
+
+
     release(&ptable.lock);
 
   }

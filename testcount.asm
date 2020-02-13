@@ -54,7 +54,7 @@ unsigned lcg_parkmiller(unsigned *state)
 unsigned next_random() {
   3d:	55                   	push   %ebp
   3e:	89 e5                	mov    %esp,%ebp
-    return lcg_parkmiller(&random_seed) % RANDOM_MAX;
+    return lcg_parkmiller(&random_seed);
   40:	68 ac 09 00 00       	push   $0x9ac
   45:	e8 b6 ff ff ff       	call   0 <lcg_parkmiller>
   4a:	89 c1                	mov    %eax,%ecx
