@@ -189,6 +189,7 @@ UPROGS=\
 	_testcount\
 	_processlist\
 	_timewithtickets\
+	_lotterytest\
         _shutdown\
 
 

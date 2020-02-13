@@ -346,7 +346,7 @@ scheduler(void)
       runnable_processes++;
 
       total_tickets += p->tickets;
-      cprintf("process %d has %d tickets \n", p->pid, p->tickets);
+      
    
     }
 
@@ -357,7 +357,7 @@ scheduler(void)
 
     unsigned myRandom = next_random();
     myRandom = myRandom % total_tickets;
-    if(myRandom == 0) myRandom++;
+    
     int myRandInt = (int) myRandom;
     int tick_index = 0;
 
@@ -365,7 +365,7 @@ scheduler(void)
       if(p->state != RUNNABLE) continue;
 
       tick_index += p->tickets;
-      if(tick_index < myRandInt) continue;
+      if(tick_index > myRandInt){
 
          // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -373,14 +373,15 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-      //p->num_times_scheduled++;
+      p->num_times_scheduled++;
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
-
+      break;
+      }
     }
 
 
